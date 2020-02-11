@@ -87,11 +87,13 @@ def compat(python_version: Tuple[int, int], asdl_url: str = None):
         compat_specs(f, specs)
 
 
-compat((3, 5))
-compat((3, 6))
-compat((3, 7))
-compat((3, 8))
-compat((
-    3, 9
-), "https://raw.githubusercontent.com/python/cpython/v3.9.0a3/Parser/Python.asdl"
-       )
+if __name__ == '__main__':
+
+    compat((3, 5))
+    compat((3, 6))
+    compat((3, 7))
+    compat((3, 8))
+    compat((
+        3, 9
+    ), "https://raw.githubusercontent.com/python/cpython/v3.9.0a3/Parser/Python.asdl"
+           )
