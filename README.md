@@ -25,10 +25,12 @@ backward compatibility library for Python standard library `ast`.
 ## Usage        
 
 ```python
-import ast_compat as ast
+import ast_compat as astc
 from ast_compat import get_constant
 
-assert get_constant(ast.Constant((1, 2))) == (1, 2)
+assert get_constant(astc.Constant((1, 2))) == (1, 2)
+
+empty_args = astc.arguments() # work for all of Python 3.5-3.9
 ```
 
 
@@ -47,7 +49,7 @@ The file of generator is `generate_ast_compat.py`, and the use of generator API 
 
 ```python
 from generate_ast_compat import compat
-compat((3, 5))
+compat((3, 5)) # generate ast_compat/compat3k5.py
 compat((3, 6))
 compat((3, 7))
 compat((3, 8))
