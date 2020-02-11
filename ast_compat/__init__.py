@@ -1,10 +1,17 @@
-import ast_compat.make as _make
-from ast_compat.make import get_constant
+from sys import version_info
 
-__version__ = '0.1.0'
+ver = version_info[:2]
+if ver == (3, 5):
+    from .compat3k5 import *
 
-_g = globals()
-for k, v in _make.ast.__dict__.items():
-    if not k.startswith('__'):
-        _g[k] = v
-del _g, _make
+elif ver == (3, 6):
+    from .compat3k6 import *
+
+elif ver == (3, 7):
+    from .compat3k6 import *
+
+elif ver == (3, 8):
+    from .compat3k6 import *
+
+elif ver == (3, 9):
+    from .compat3k6 import *

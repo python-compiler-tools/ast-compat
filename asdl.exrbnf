@@ -1,0 +1,31 @@
+START : <BOF>
+           'module' 'Python' '{' list(pattern) '}'
+         <EOF>
+       { sum($4, []) }
+       ;
+
+builtin_type: 'identifier' | 'int' | 'string' | 'object' | 'constant';
+
+type:   type '*'      { defaultList }
+      | type '?'      { defaultNone }
+      | builtin_type  { noDefault }
+      | ident         { noDefault }
+      ;
+
+args : '(' ')' { [] }
+     | '(' separated_list(',',  ann) ')' { $1 }
+     ;
+
+attributes : 'attributes' args ;
+
+case : ident args { ($0, $1) }
+     | ident { ($0, []) }
+     ;
+
+ann : type ident { ($0, $1) };
+
+pattern : ident '=' separated_list('|', case) [attributes] { $2 }
+        | ident '=' args  [attributes]                     { [($0, $2)] }
+        ;
+
+ident : (<IDENT> | 'module' | 'attributes') { *$0 };
