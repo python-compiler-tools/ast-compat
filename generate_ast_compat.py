@@ -52,6 +52,7 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
 
     l('import ast')
     l('from .make import *')
+    l('_unset = object()')
     l('')
 
     for typename, fields in specs:
@@ -60,7 +61,7 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
         if not fields:
             args = ''
         else:
-            args = ''.join(f', {field}=None' for type, field in fields)
+            args = ''.join(f', {field}=_unset' for type, field in fields)
 
         l(f'    def __new__(self{args}):')
         indent = f'        '
@@ -68,10 +69,12 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
         for type, field in fields:
             if type == rts.noDefault:
                 l(indent +
-                  f'if {field} is None: raise ValueError({field + " cannot be None."!r})'
+                  f'if {field} is _unset: raise ValueError({field + " cannot be None."!r})'
                   )
             elif type == rts.defaultList:
-                l(indent + f'if {field} is None: {field} = []')
+                l(indent + f'if {field} is _unset: {field} = []')
+            elif type == rts.defaultNone:
+                l(indent + f'if {field} is _unset: {field} = None')
         l(f'{indent}return ast.{typename}({", ".join(snd for _, snd in fields)})'
           )
         l('')
