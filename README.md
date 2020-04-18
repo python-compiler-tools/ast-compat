@@ -14,13 +14,15 @@ backward compatibility library for Python standard library `ast`.
     
     **Note that you should use `ast_compat.XXX` instead of `ast.XXX` to construct ASTs.**
     
-- Supporting **ast.Constant** before Python 3.6.
+- Support **ast.Constant** before Python 3.6.
 
     `ast.Constant` is convenient, and things like `ast.Num` are redundant according to this observation and improvement: https://bugs.python.org/issue32892
     
     However, `ast.Constant` is not available in 3.5 or earlier versions, thus we backport `ast.Constant` in this library.
     
     To access the content of `ast.Constant` in a compatible way, use `ast_compat.get_constant` instead of `.value`.
+
+- Support dumping AST to string with **ast_compat.unparse**, which synchronizes the tooling code provided by CPython official repo.
 
 ## Usage        
 
@@ -42,14 +44,14 @@ the ADSL file you can find at
 `https://github.com/python/cpython/blob/<branch/tag>/Parser/Python.asdl`.
 
 We parse the file, and generate verifications and default argument factories,
-check `ast_compat/compat3k*.py`. To explain, `ast_compat/compat3k5.py` is for
-Python 3.5, and `ast_compat/compat3k9.py` is for Python 3.9.
+check `ast_compat/compat3k*_{ast|unparse}.py`. To explain, `ast_compat/compat3k5_*.py` is for
+Python 3.5, and `ast_compat/compat3k9_*.py` is for Python 3.9.
 
 The file of generator is `generate_ast_compat.py`, and the use of generator API is in this way:
 
 ```python
 from generate_ast_compat import compat
-compat((3, 5)) # generate ast_compat/compat3k5.py
+compat((3, 5)) # generate ast_compat/compat3k5_ast.py and  ast_compat/compat3k5_unparse.py
 compat((3, 6))
 compat((3, 7))
 compat((3, 8))
