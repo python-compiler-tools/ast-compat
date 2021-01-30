@@ -102,8 +102,13 @@ def compat(
         unparse_text = default_unparse_text
     else:
         unparse_text = unparse_query_resp.text
+    
     with open(f"ast_compat/compat{major}k{minor}_unparse.py", "w") as f:
+        if python_version >= (3, 9):
+            f.write("from ast import unparse")
+            return
         f.write(unparse_text)
+        f.write('\n')
         f.write("def unparse(ast_obj):\n"
                 "    IO = io.StringIO()\n"
                 "    Unparser(ast_obj, IO)\n"

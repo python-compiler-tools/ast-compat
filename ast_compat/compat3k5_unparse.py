@@ -624,6 +624,7 @@ def main(args):
 
 if __name__=='__main__':
     main(sys.argv[1:])
+
 def unparse(ast_obj):
     IO = io.StringIO()
     Unparser(ast_obj, IO)
