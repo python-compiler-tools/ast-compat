@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md') as readme:
     readme = readme.read()
 
-version = "0.11.0"
+version = "0.11.1"
 
 setup(
     name='ast-compat',
