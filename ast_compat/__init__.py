@@ -21,3 +21,15 @@ elif ver == (3, 8):
 elif ver == (3, 9):
     from .compat3k9_ast import *
     from .compat3k9_unparse import unparse
+
+elif ver == (3, 10):
+    from .compat3k10_ast import *
+    from .compat3k10_unparse import unparse
+
+elif ver == (3, 11):
+    from .compat3k10_ast import *
+    from .compat3k10_unparse import unparse
+
+else:
+    major, minor = ver
+    raise ImportError("Unsupported Python version: {}.{}, only [3.5, 3.11] is supported.".format(major, minor))
