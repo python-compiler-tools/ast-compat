@@ -1,3 +1,4 @@
+from __future__ import annotations
 from asdl_parse import mk_parser, run_lexer, Tokens
 import parser_rts as rts
 from typing import List, Tuple
@@ -63,7 +64,7 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
         else:
             args = "".join(f", {field}=_unset" for type, field in fields)
 
-        l(f"    def __new__(self{args}):")
+        l(f"    def __new__(cls{args}):")
         indent = f"        "
         l(f'{indent}"""start checking validation"""')
         for type, field in fields:
@@ -83,15 +84,14 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
 default_unparse_text = """from ast import unparse"""
 
 
-def compat(
-    python_version: Tuple[int, int], asdl_url: str = None, unparse_url: str = None
-):
+def compat(python_version: Tuple[int, int], asdl_url: str | None = None, unparse_url: str | None = None):
     major, minor = python_version
     if asdl_url is None:
         asdl_url = f"https://raw.githubusercontent.com/python/cpython/{major}.{minor}/Parser/Python.asdl"
 
     if unparse_url is None:
         unparse_url = f"https://raw.githubusercontent.com/python/cpython/{major}.{minor}/Tools/parser/unparse.py"
+
     asdl_text = requests.get(asdl_url).text
     asdl_specs = parse(asdl_text, asdl_url)
     with open(f"ast_compat/compat{major}k{minor}_ast.py", "w") as f:
@@ -102,7 +102,7 @@ def compat(
         unparse_text = default_unparse_text
     else:
         unparse_text = unparse_query_resp.text
-    
+
     with open(f"ast_compat/compat{major}k{minor}_unparse.py", "w") as f:
         if python_version >= (3, 9):
             f.write("from ast import unparse")
@@ -118,12 +118,10 @@ def compat(
 
 
 if __name__ == "__main__":
-
     compat((3, 5))
     compat((3, 6))
     compat((3, 7))
     compat((3, 8))
-    compat(
-        (3, 9),
-        "https://raw.githubusercontent.com/python/cpython/v3.9.0a3/Parser/Python.asdl",
-    )
+    compat((3, 9))
+    compat((3, 10))
+    compat((3, 11))

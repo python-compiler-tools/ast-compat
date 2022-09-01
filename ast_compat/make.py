@@ -13,7 +13,7 @@ if not hasattr(_ast, 'Constant'):
     class Constant(metaclass=SupertypeMeta):
         __past__ = (_ast.Num, _ast.NameConstant, _ast.Str)
 
-        def __new__(self, i):
+        def __new__(cls, i):
             if isinstance(i, Number):
                 return _ast.Num(i)
 

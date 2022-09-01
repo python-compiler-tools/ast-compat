@@ -1,4 +1,5 @@
 from sys import version_info
+from ast import parse, NodeTransformer, NodeVisitor, fix_missing_locations
 
 ver = version_info[:2]
 if ver == (3, 5):

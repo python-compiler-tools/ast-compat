@@ -4,10 +4,11 @@ _unset = object()
 
 class Module(metaclass=SupertypeMeta):
     __past__ = ast.Module
-    def __new__(cls, body=_unset):
+    def __new__(cls, body=_unset, type_ignores=_unset):
         """start checking validation"""
         if body is _unset: body = []
-        return ast.Module(body)
+        if type_ignores is _unset: type_ignores = []
+        return ast.Module(body, type_ignores)
 
 class Interactive(metaclass=SupertypeMeta):
     __past__ = ast.Interactive
@@ -23,34 +24,37 @@ class Expression(metaclass=SupertypeMeta):
         if body is _unset: raise ValueError('body cannot be None.')
         return ast.Expression(body)
 
-class Suite(metaclass=SupertypeMeta):
-    __past__ = ast.Suite
-    def __new__(cls, body=_unset):
+class FunctionType(metaclass=SupertypeMeta):
+    __past__ = ast.FunctionType
+    def __new__(cls, argtypes=_unset, returns=_unset):
         """start checking validation"""
-        if body is _unset: body = []
-        return ast.Suite(body)
+        if argtypes is _unset: argtypes = []
+        if returns is _unset: raise ValueError('returns cannot be None.')
+        return ast.FunctionType(argtypes, returns)
 
 class FunctionDef(metaclass=SupertypeMeta):
     __past__ = ast.FunctionDef
-    def __new__(cls, name=_unset, args=_unset, body=_unset, decorator_list=_unset, returns=_unset):
+    def __new__(cls, name=_unset, args=_unset, body=_unset, decorator_list=_unset, returns=_unset, type_comment=_unset):
         """start checking validation"""
         if name is _unset: raise ValueError('name cannot be None.')
         if args is _unset: raise ValueError('args cannot be None.')
         if body is _unset: body = []
         if decorator_list is _unset: decorator_list = []
         if returns is _unset: returns = None
-        return ast.FunctionDef(name, args, body, decorator_list, returns)
+        if type_comment is _unset: type_comment = None
+        return ast.FunctionDef(name, args, body, decorator_list, returns, type_comment)
 
 class AsyncFunctionDef(metaclass=SupertypeMeta):
     __past__ = ast.AsyncFunctionDef
-    def __new__(cls, name=_unset, args=_unset, body=_unset, decorator_list=_unset, returns=_unset):
+    def __new__(cls, name=_unset, args=_unset, body=_unset, decorator_list=_unset, returns=_unset, type_comment=_unset):
         """start checking validation"""
         if name is _unset: raise ValueError('name cannot be None.')
         if args is _unset: raise ValueError('args cannot be None.')
         if body is _unset: body = []
         if decorator_list is _unset: decorator_list = []
         if returns is _unset: returns = None
-        return ast.AsyncFunctionDef(name, args, body, decorator_list, returns)
+        if type_comment is _unset: type_comment = None
+        return ast.AsyncFunctionDef(name, args, body, decorator_list, returns, type_comment)
 
 class ClassDef(metaclass=SupertypeMeta):
     __past__ = ast.ClassDef
@@ -79,11 +83,12 @@ class Delete(metaclass=SupertypeMeta):
 
 class Assign(metaclass=SupertypeMeta):
     __past__ = ast.Assign
-    def __new__(cls, targets=_unset, value=_unset):
+    def __new__(cls, targets=_unset, value=_unset, type_comment=_unset):
         """start checking validation"""
         if targets is _unset: targets = []
         if value is _unset: raise ValueError('value cannot be None.')
-        return ast.Assign(targets, value)
+        if type_comment is _unset: type_comment = None
+        return ast.Assign(targets, value, type_comment)
 
 class AugAssign(metaclass=SupertypeMeta):
     __past__ = ast.AugAssign
@@ -106,23 +111,25 @@ class AnnAssign(metaclass=SupertypeMeta):
 
 class For(metaclass=SupertypeMeta):
     __past__ = ast.For
-    def __new__(cls, target=_unset, iter=_unset, body=_unset, orelse=_unset):
+    def __new__(cls, target=_unset, iter=_unset, body=_unset, orelse=_unset, type_comment=_unset):
         """start checking validation"""
         if target is _unset: raise ValueError('target cannot be None.')
         if iter is _unset: raise ValueError('iter cannot be None.')
         if body is _unset: body = []
         if orelse is _unset: orelse = []
-        return ast.For(target, iter, body, orelse)
+        if type_comment is _unset: type_comment = None
+        return ast.For(target, iter, body, orelse, type_comment)
 
 class AsyncFor(metaclass=SupertypeMeta):
     __past__ = ast.AsyncFor
-    def __new__(cls, target=_unset, iter=_unset, body=_unset, orelse=_unset):
+    def __new__(cls, target=_unset, iter=_unset, body=_unset, orelse=_unset, type_comment=_unset):
         """start checking validation"""
         if target is _unset: raise ValueError('target cannot be None.')
         if iter is _unset: raise ValueError('iter cannot be None.')
         if body is _unset: body = []
         if orelse is _unset: orelse = []
-        return ast.AsyncFor(target, iter, body, orelse)
+        if type_comment is _unset: type_comment = None
+        return ast.AsyncFor(target, iter, body, orelse, type_comment)
 
 class While(metaclass=SupertypeMeta):
     __past__ = ast.While
@@ -144,19 +151,29 @@ class If(metaclass=SupertypeMeta):
 
 class With(metaclass=SupertypeMeta):
     __past__ = ast.With
-    def __new__(cls, items=_unset, body=_unset):
+    def __new__(cls, items=_unset, body=_unset, type_comment=_unset):
         """start checking validation"""
         if items is _unset: items = []
         if body is _unset: body = []
-        return ast.With(items, body)
+        if type_comment is _unset: type_comment = None
+        return ast.With(items, body, type_comment)
 
 class AsyncWith(metaclass=SupertypeMeta):
     __past__ = ast.AsyncWith
-    def __new__(cls, items=_unset, body=_unset):
+    def __new__(cls, items=_unset, body=_unset, type_comment=_unset):
         """start checking validation"""
         if items is _unset: items = []
         if body is _unset: body = []
-        return ast.AsyncWith(items, body)
+        if type_comment is _unset: type_comment = None
+        return ast.AsyncWith(items, body, type_comment)
+
+class Match(metaclass=SupertypeMeta):
+    __past__ = ast.Match
+    def __new__(cls, subject=_unset, cases=_unset):
+        """start checking validation"""
+        if subject is _unset: raise ValueError('subject cannot be None.')
+        if cases is _unset: cases = []
+        return ast.Match(subject, cases)
 
 class Raise(metaclass=SupertypeMeta):
     __past__ = ast.Raise
@@ -246,6 +263,14 @@ class BoolOp(metaclass=SupertypeMeta):
         if op is _unset: raise ValueError('op cannot be None.')
         if values is _unset: values = []
         return ast.BoolOp(op, values)
+
+class NamedExpr(metaclass=SupertypeMeta):
+    __past__ = ast.NamedExpr
+    def __new__(cls, target=_unset, value=_unset):
+        """start checking validation"""
+        if target is _unset: raise ValueError('target cannot be None.')
+        if value is _unset: raise ValueError('value cannot be None.')
+        return ast.NamedExpr(target, value)
 
 class BinOp(metaclass=SupertypeMeta):
     __past__ = ast.BinOp
@@ -368,26 +393,12 @@ class Call(metaclass=SupertypeMeta):
         if keywords is _unset: keywords = []
         return ast.Call(func, args, keywords)
 
-class Num(metaclass=SupertypeMeta):
-    __past__ = ast.Num
-    def __new__(cls, n=_unset):
-        """start checking validation"""
-        if n is _unset: raise ValueError('n cannot be None.')
-        return ast.Num(n)
-
-class Str(metaclass=SupertypeMeta):
-    __past__ = ast.Str
-    def __new__(cls, s=_unset):
-        """start checking validation"""
-        if s is _unset: raise ValueError('s cannot be None.')
-        return ast.Str(s)
-
 class FormattedValue(metaclass=SupertypeMeta):
     __past__ = ast.FormattedValue
     def __new__(cls, value=_unset, conversion=_unset, format_spec=_unset):
         """start checking validation"""
         if value is _unset: raise ValueError('value cannot be None.')
-        if conversion is _unset: conversion = None
+        if conversion is _unset: raise ValueError('conversion cannot be None.')
         if format_spec is _unset: format_spec = None
         return ast.FormattedValue(value, conversion, format_spec)
 
@@ -398,32 +409,13 @@ class JoinedStr(metaclass=SupertypeMeta):
         if values is _unset: values = []
         return ast.JoinedStr(values)
 
-class Bytes(metaclass=SupertypeMeta):
-    __past__ = ast.Bytes
-    def __new__(cls, s=_unset):
-        """start checking validation"""
-        if s is _unset: raise ValueError('s cannot be None.')
-        return ast.Bytes(s)
-
-class NameConstant(metaclass=SupertypeMeta):
-    __past__ = ast.NameConstant
-    def __new__(cls, value=_unset):
-        """start checking validation"""
-        if value is _unset: raise ValueError('value cannot be None.')
-        return ast.NameConstant(value)
-
-class Ellipsis(metaclass=SupertypeMeta):
-    __past__ = ast.Ellipsis
-    def __new__(cls):
-        """start checking validation"""
-        return ast.Ellipsis()
-
 class Constant(metaclass=SupertypeMeta):
     __past__ = ast.Constant
-    def __new__(cls, value=_unset):
+    def __new__(cls, value=_unset, kind=_unset):
         """start checking validation"""
         if value is _unset: raise ValueError('value cannot be None.')
-        return ast.Constant(value)
+        if kind is _unset: kind = None
+        return ast.Constant(value, kind)
 
 class Attribute(metaclass=SupertypeMeta):
     __past__ = ast.Attribute
@@ -475,6 +467,15 @@ class Tuple(metaclass=SupertypeMeta):
         if ctx is _unset: raise ValueError('ctx cannot be None.')
         return ast.Tuple(elts, ctx)
 
+class Slice(metaclass=SupertypeMeta):
+    __past__ = ast.Slice
+    def __new__(cls, lower=_unset, upper=_unset, step=_unset):
+        """start checking validation"""
+        if lower is _unset: lower = None
+        if upper is _unset: upper = None
+        if step is _unset: step = None
+        return ast.Slice(lower, upper, step)
+
 class Load(metaclass=SupertypeMeta):
     __past__ = ast.Load
     def __new__(cls):
@@ -492,47 +493,6 @@ class Del(metaclass=SupertypeMeta):
     def __new__(cls):
         """start checking validation"""
         return ast.Del()
-
-class AugLoad(metaclass=SupertypeMeta):
-    __past__ = ast.AugLoad
-    def __new__(cls):
-        """start checking validation"""
-        return ast.AugLoad()
-
-class AugStore(metaclass=SupertypeMeta):
-    __past__ = ast.AugStore
-    def __new__(cls):
-        """start checking validation"""
-        return ast.AugStore()
-
-class Param(metaclass=SupertypeMeta):
-    __past__ = ast.Param
-    def __new__(cls):
-        """start checking validation"""
-        return ast.Param()
-
-class Slice(metaclass=SupertypeMeta):
-    __past__ = ast.Slice
-    def __new__(cls, lower=_unset, upper=_unset, step=_unset):
-        """start checking validation"""
-        if lower is _unset: lower = None
-        if upper is _unset: upper = None
-        if step is _unset: step = None
-        return ast.Slice(lower, upper, step)
-
-class ExtSlice(metaclass=SupertypeMeta):
-    __past__ = ast.ExtSlice
-    def __new__(cls, dims=_unset):
-        """start checking validation"""
-        if dims is _unset: dims = []
-        return ast.ExtSlice(dims)
-
-class Index(metaclass=SupertypeMeta):
-    __past__ = ast.Index
-    def __new__(cls, value=_unset):
-        """start checking validation"""
-        if value is _unset: raise ValueError('value cannot be None.')
-        return ast.Index(value)
 
 class And(metaclass=SupertypeMeta):
     __past__ = ast.And
@@ -729,23 +689,25 @@ class ExceptHandler(metaclass=SupertypeMeta):
 
 class arguments(metaclass=SupertypeMeta):
     __past__ = ast.arguments
-    def __new__(cls, args=_unset, vararg=_unset, kwonlyargs=_unset, kw_defaults=_unset, kwarg=_unset, defaults=_unset):
+    def __new__(cls, posonlyargs=_unset, args=_unset, vararg=_unset, kwonlyargs=_unset, kw_defaults=_unset, kwarg=_unset, defaults=_unset):
         """start checking validation"""
+        if posonlyargs is _unset: posonlyargs = []
         if args is _unset: args = []
         if vararg is _unset: vararg = None
         if kwonlyargs is _unset: kwonlyargs = []
         if kw_defaults is _unset: kw_defaults = []
         if kwarg is _unset: kwarg = None
         if defaults is _unset: defaults = []
-        return ast.arguments(args, vararg, kwonlyargs, kw_defaults, kwarg, defaults)
+        return ast.arguments(posonlyargs, args, vararg, kwonlyargs, kw_defaults, kwarg, defaults)
 
 class arg(metaclass=SupertypeMeta):
     __past__ = ast.arg
-    def __new__(cls, arg=_unset, annotation=_unset):
+    def __new__(cls, arg=_unset, annotation=_unset, type_comment=_unset):
         """start checking validation"""
         if arg is _unset: raise ValueError('arg cannot be None.')
         if annotation is _unset: annotation = None
-        return ast.arg(arg, annotation)
+        if type_comment is _unset: type_comment = None
+        return ast.arg(arg, annotation, type_comment)
 
 class keyword(metaclass=SupertypeMeta):
     __past__ = ast.keyword
@@ -770,4 +732,83 @@ class withitem(metaclass=SupertypeMeta):
         if context_expr is _unset: raise ValueError('context_expr cannot be None.')
         if optional_vars is _unset: optional_vars = None
         return ast.withitem(context_expr, optional_vars)
+
+class match_case(metaclass=SupertypeMeta):
+    __past__ = ast.match_case
+    def __new__(cls, pattern=_unset, guard=_unset, body=_unset):
+        """start checking validation"""
+        if pattern is _unset: raise ValueError('pattern cannot be None.')
+        if guard is _unset: guard = None
+        if body is _unset: body = []
+        return ast.match_case(pattern, guard, body)
+
+class MatchValue(metaclass=SupertypeMeta):
+    __past__ = ast.MatchValue
+    def __new__(cls, value=_unset):
+        """start checking validation"""
+        if value is _unset: raise ValueError('value cannot be None.')
+        return ast.MatchValue(value)
+
+class MatchSingleton(metaclass=SupertypeMeta):
+    __past__ = ast.MatchSingleton
+    def __new__(cls, value=_unset):
+        """start checking validation"""
+        if value is _unset: raise ValueError('value cannot be None.')
+        return ast.MatchSingleton(value)
+
+class MatchSequence(metaclass=SupertypeMeta):
+    __past__ = ast.MatchSequence
+    def __new__(cls, patterns=_unset):
+        """start checking validation"""
+        if patterns is _unset: patterns = []
+        return ast.MatchSequence(patterns)
+
+class MatchMapping(metaclass=SupertypeMeta):
+    __past__ = ast.MatchMapping
+    def __new__(cls, keys=_unset, patterns=_unset, rest=_unset):
+        """start checking validation"""
+        if keys is _unset: keys = []
+        if patterns is _unset: patterns = []
+        if rest is _unset: rest = None
+        return ast.MatchMapping(keys, patterns, rest)
+
+class MatchClass(metaclass=SupertypeMeta):
+    __past__ = ast.MatchClass
+    def __new__(cls, cls=_unset, patterns=_unset, kwd_attrs=_unset, kwd_patterns=_unset):
+        """start checking validation"""
+        if cls is _unset: raise ValueError('cls cannot be None.')
+        if patterns is _unset: patterns = []
+        if kwd_attrs is _unset: kwd_attrs = []
+        if kwd_patterns is _unset: kwd_patterns = []
+        return ast.MatchClass(cls, patterns, kwd_attrs, kwd_patterns)
+
+class MatchStar(metaclass=SupertypeMeta):
+    __past__ = ast.MatchStar
+    def __new__(cls, name=_unset):
+        """start checking validation"""
+        if name is _unset: name = None
+        return ast.MatchStar(name)
+
+class MatchAs(metaclass=SupertypeMeta):
+    __past__ = ast.MatchAs
+    def __new__(cls, pattern=_unset, name=_unset):
+        """start checking validation"""
+        if pattern is _unset: pattern = None
+        if name is _unset: name = None
+        return ast.MatchAs(pattern, name)
+
+class MatchOr(metaclass=SupertypeMeta):
+    __past__ = ast.MatchOr
+    def __new__(cls, patterns=_unset):
+        """start checking validation"""
+        if patterns is _unset: patterns = []
+        return ast.MatchOr(patterns)
+
+class TypeIgnore(metaclass=SupertypeMeta):
+    __past__ = ast.TypeIgnore
+    def __new__(cls, lineno=_unset, tag=_unset):
+        """start checking validation"""
+        if lineno is _unset: raise ValueError('lineno cannot be None.')
+        if tag is _unset: raise ValueError('tag cannot be None.')
+        return ast.TypeIgnore(lineno, tag)
 

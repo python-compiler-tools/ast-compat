@@ -5,26 +5,26 @@ backward compatibility library for Python standard library `ast`.
 ## What is AST-Compat for?
 
 - **backward compatibility for constructing ASTs**
-    
+
     For instance, `ast.arguments` is changed since Python 3.8, that another field `posonlyarg` is introduced,
     hence you should construct an `ast.arguments` with an additional argument `posonlyarg=...` since Python 3.8
     and it wouldn't work if your code is written before Python 3.8.
-    
+
     Through `ast_compat`, you don't have to worry about above question if a new argument is **optional or a list**.
-    
+
     **Note that you should use `ast_compat.XXX` instead of `ast.XXX` to construct ASTs.**
-    
+
 - Support **ast.Constant** before Python 3.6.
 
     `ast.Constant` is convenient, and things like `ast.Num` are redundant according to this observation and improvement: https://bugs.python.org/issue32892
-    
+
     However, `ast.Constant` is not available in 3.5 or earlier versions, thus we backport `ast.Constant` in this library.
-    
+
     To access the content of `ast.Constant` in a compatible way, use `ast_compat.get_constant` instead of `.value`.
 
 - Support dumping AST to string with **ast_compat.unparse**, which synchronizes the tooling code provided by CPython official repo.
 
-## Usage        
+## Usage
 
 ```python
 import ast_compat as astc
@@ -32,7 +32,7 @@ from ast_compat import get_constant
 
 assert get_constant(astc.Constant((1, 2))) == (1, 2)
 
-empty_args = astc.arguments() # work for all of Python 3.5-3.9
+empty_args = astc.arguments() # work for all of Python 3.5-3.11
 ```
 
 
@@ -59,5 +59,4 @@ prerelease_url = "https://raw.githubusercontent.com/python/cpython/v3.9.0a3/pars
 compat((3, 9), prerelease_url)
 ```
 
-The code generation needs Python 3.7+,
-though this library works for Python 3.5 and 3.5+.
+The code generation needs Python 3.7+, though this library works for Python 3.5 and 3.5+.
