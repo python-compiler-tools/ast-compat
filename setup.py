@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md') as readme:
     readme = readme.read()
 
-version = "0.11.1"
+version = "0.12.0"
 
 setup(
     name='ast-compat',
@@ -30,6 +30,8 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
     zip_safe=False,

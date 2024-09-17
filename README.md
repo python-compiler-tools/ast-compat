@@ -1,6 +1,10 @@
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/python-compiler-tools/ast-compat/blob/main/LICENSE)
+[![versions](https://img.shields.io/pypi/pyversions/tyjuliacall.svg)](https://pypi.org/project/ast-compat/#history)
+[![pypi](https://img.shields.io/pypi/v/ast-compat.svg)](https://pypi.org/project/ast-compat/)
+
 # AST-Compat
 
-backward compatibility library for Python standard library `ast`.
+Compatible AST construction and `ast.unparse` for Python 3.5-3.13.
 
 ## What is AST-Compat for?
 
@@ -32,7 +36,7 @@ from ast_compat import get_constant
 
 assert get_constant(astc.Constant((1, 2))) == (1, 2)
 
-empty_args = astc.arguments() # work for all of Python 3.5-3.11
+empty_args = astc.arguments() # work for all of Python 3.5-3.13
 ```
 
 

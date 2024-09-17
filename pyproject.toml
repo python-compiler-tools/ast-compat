@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ast-compat"
-version = "0.1.0"
-description = ""
+version = "0.12.0"
+description = "cross-version compatible ast library"
 authors = ["thautawarm <twshere@outlook.com>"]
 
 [tool.poetry.dependencies]
