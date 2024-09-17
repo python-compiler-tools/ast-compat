@@ -4,6 +4,7 @@ import parser_rts as rts
 from typing import List, Tuple
 from io import StringIO
 import requests
+import os
 
 _parse = mk_parser()
 
@@ -64,7 +65,7 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
         else:
             args = "".join(f", {field}=_unset" for type, field in fields)
 
-        l(f"    def __new__(cls{args}):")
+        l(f"    def __new__(__cls{args}):")
         indent = f"        "
         l(f'{indent}"""start checking validation"""')
         for type, field in fields:
@@ -84,7 +85,12 @@ def compat_specs(io, specs: List[Tuple[str, List[Tuple[str, str]]]]):
 default_unparse_text = """from ast import unparse"""
 
 
+proxies = {}
+if 'HTTPS_PROXY' in os.environ:
+    proxies['https'] = os.environ['HTTPS_PROXY']
+
 def compat(python_version: Tuple[int, int], asdl_url: str | None = None, unparse_url: str | None = None):
+    print("generating ast_compat for python", python_version)
     major, minor = python_version
     if asdl_url is None:
         asdl_url = f"https://raw.githubusercontent.com/python/cpython/{major}.{minor}/Parser/Python.asdl"
@@ -92,29 +98,26 @@ def compat(python_version: Tuple[int, int], asdl_url: str | None = None, unparse
     if unparse_url is None:
         unparse_url = f"https://raw.githubusercontent.com/python/cpython/{major}.{minor}/Tools/parser/unparse.py"
 
-    asdl_text = requests.get(asdl_url).text
+    asdl_text = requests.get(asdl_url, proxies=proxies).text
     asdl_specs = parse(asdl_text, asdl_url)
     with open(f"ast_compat/compat{major}k{minor}_ast.py", "w") as f:
         compat_specs(f, asdl_specs)
-
-    unparse_query_resp = requests.get(unparse_url)
-    if unparse_query_resp.status_code == 404:
-        unparse_text = default_unparse_text
-    else:
-        unparse_text = unparse_query_resp.text
 
     with open(f"ast_compat/compat{major}k{minor}_unparse.py", "w") as f:
         if python_version >= (3, 9):
             f.write("from ast import unparse")
             return
+        unparse_query_resp = requests.get(unparse_url)
+        if unparse_query_resp.status_code == 404:
+            unparse_text = default_unparse_text
+        else:
+            unparse_text = unparse_query_resp.text
         f.write(unparse_text)
         f.write('\n')
         f.write("def unparse(ast_obj):\n"
                 "    IO = io.StringIO()\n"
                 "    Unparser(ast_obj, IO)\n"
                 "    return IO.getvalue().strip()\n")
-
-
 
 
 if __name__ == "__main__":
@@ -125,3 +128,5 @@ if __name__ == "__main__":
     compat((3, 9))
     compat((3, 10))
     compat((3, 11))
+    compat((3, 12))
+    compat((3, 13))
